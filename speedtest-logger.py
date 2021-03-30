@@ -1,30 +1,32 @@
 import speedtest
 import time
-from time import sleep
 import sys
+import csv
 
-filename = time.strftime("%Y%m%d-%H%M%S")
+filename = time.strftime("%Y-%m-%d-%H-%M-%S")
 
 filename += "-speedtest-results.csv"
 
 print("Opening file " + filename)
 with open(filename, "x") as f:
-    # The OTT Communications server.
-    servers = [1421]
-    s = speedtest.Speedtest()
+    csv_file_writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    headers = ["Timestamp (eastern)", "Download (mbps)", "Upload (mbps)"]
+    csv_file_writer.writerow(headers)
+    print("Wrote csv headers.")
 
-    wrote_headers = False
+    s = speedtest.Speedtest()
+    s.get_closest_servers()
 
     print("Starting speedtest loop.")
     while True:
         try:
-            s.get_servers(servers)
+            timestamp = time.strftime("%Y-%m-%d-%H:%M:%S")
             s.download()
             s.upload()
-            if wrote_headers == False:
-                f.write(s.results.csv_header() + "\n")
-                wrote_headers = True
-            f.write(s.results.csv() + "\n")
+            download = s.results.download / 1000000
+            upload = s.results.upload / 1000000
+            row = [timestamp, f"{download:.2f}", f"{upload:.2f}"]
+            csv_file_writer.writerow(row)
             print("Finished a test.  Running again.")
         except KeyboardInterrupt:
             print("Quitting gracefully.")
