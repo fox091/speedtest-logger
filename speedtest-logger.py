@@ -20,12 +20,12 @@ with open(filename, "x") as f:
     print("Starting speedtest loop.")
     while True:
         try:
-            timestamp = time.strftime("%Y-%m-%d-%H:%M:%S")
+            timestamp = time.strftime("%Y-%m-%d-%I:%M:%S%p")
             s.download()
             s.upload()
             download = s.results.download / 1000000
             upload = s.results.upload / 1000000
-            row = [timestamp, f"{download:.2f}", f"{upload:.2f}"]
+            row = [timestamp, f"{download:.4f}", f"{upload:.4f}"]
             csv_file_writer.writerow(row)
             print("Finished a test.  Running again.")
         except KeyboardInterrupt:
