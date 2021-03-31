@@ -8,7 +8,7 @@ filename = time.strftime("%Y-%m-%d-%H-%M-%S")
 filename += "-speedtest-results.csv"
 
 print("Opening file " + filename)
-with open(filename, "x") as f:
+with open(filename, "x", newline='', encoding='utf-8') as f:
     csv_file_writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
     headers = ["Timestamp (eastern)", "Download (mbps)", "Upload (mbps)"]
     csv_file_writer.writerow(headers)
